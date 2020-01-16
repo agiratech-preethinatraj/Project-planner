@@ -85,5 +85,5 @@ const route     = require('./routes/index')(app, rt)
 
 //Port allocation
 app.listen(3006,function(){
-  console.log("listening to 3005");
+  console.log("listening to 3006");
 });
