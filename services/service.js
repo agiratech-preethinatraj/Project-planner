@@ -2,7 +2,7 @@ const database  = require('../database/mysql')
 function createEvent(req,callback,status) {
 
 		try {
-      console.log('req.body.date')
+
       console.log(req)
       database.con.query('INSERT INTO event (date, agenda, mode, status)   values (("'+req.date+'"),("'+req.agenda+'"),("'+req.mode+'"),('+req.status+'))',function(err,result){
 
@@ -17,50 +17,48 @@ function createEvent(req,callback,status) {
     		}
 		}
 
-
-
 function events(req,callback,status){
-		try {
-	    console.log('req.body.date')
-	    console.log(req)
-	    database.con.query('SELECT * from event")',function(err,result){
-				let res={}
-				     if(err){
-				       res.msg = "error"
-				         response.send(res)
-				       } else {
-				       events=[]
-				       for (r in result){
-				         ch = {}
-				         ch.E_ID     = result[r].E_ID;
-				         ch.date     = result[r].date;
-				         ch.agenda   = result[r].agenda;
-				         ch.mode     = result[r].mode;
-				         ch.status   = result[r].status;
-				         events.push(ch)
-				       }
-				       res.msg=(events)
-			         callback( 200,"Success",res);
-				     }
-					 })
-	        } catch(ex) {
-	      console.log(ex)
-	      callback(400,'error');
-	    }
-	  }
+		try{
+
+  		  db.con.query("SELECT * from event", function(err,result){
+		    let res={}
+		     if(err){
+		       res.msg = "error"
+		        callback(400,'error');
+		       } else {
+		       events=[]
+		       for (r in result){
+		         ch = {}
+		         ch.E_ID     = result[r].E_ID;
+		         ch.date     = result[r].date;
+		         ch.agenda   = result[r].agenda;
+		         ch.mode     = result[r].mode;
+		         ch.status   = result[r].status;
+		         events.push(ch)
+		       }
+		       res.msg=(events)
+		       callback( 200,"Success",res);
+		     }
+
+		  });
+		 } catch(ex) {
+		      console.log(ex)
+		      callback(400,'error');
+		  }
+		}
 
 function updateEvent(req,callback,status){
 	try{
 
-		let sql="UPDATE event SET agenda =('"+req.body.agenda+ "'),date =('"+req.body.date+ "') WHERE E_ID=('"+req.body.E_ID+"') ";
-	  db.con.query(sql, function (err, result) {
+		let sql="UPDATE event SET agenda =('"+req.agenda+ "'),date =('"+req.date+ "') WHERE E_ID=('"+req.E_ID+"') ";
+	  database.con.query(sql, function (err, result) {
 	    let res={}
 	     if(err){
 	       res.msg = "error"
-	         response.send(res)
+	       callback(400,'error')
 	         }else{
-	         console.log("one item added");
-	         res.msg = ("no of item added:"+result.affectedRows)
+	         console.log("one item updated");
+	         res.msg = ("one item updated")
 	         callback( 200,"Success",res);
 	       }
 	      })
@@ -75,19 +73,18 @@ function updateEvent(req,callback,status){
 function deleteEvent(req,callback,status){
 try{
 
-
-  let sql= "DELETE from event WHERE E_ID  = ('"+req.body.E_ID+"')";
-    db.con.query(sql, function (err, result) {
+  let sql= "DELETE from event WHERE E_ID  = ('"+req.E_ID+"')";
+    database.con.query(sql, function (err, result) {
       var res={}
        if(err){
          res.msg = "error"
-           response.send(res)
+         callback(400,'error');
            }else{
            console.log("one item deleted");
-           res.msg = ("no of item deleted:"+result.affectedRows)
+           res.msg = ("one item deleted")
            callback( 200,"Success",res);
          }
-        })
+			 });
 
     } catch(ex) {
         console.log(ex)
